@@ -15,27 +15,26 @@ export class SubscriptionsService {
   ) {}
 
   async getSubscriptions(): Promise<any> {
-    return this.subscriptionRepository.find();
+    return await this.subscriptionRepository.find();
   }
 
   async postSubscribe(email, subDto: SubcriptionDto) {
     const followeeEmail = subDto.email;
 
-    const follower = await this.usersRepository.findOne({
+    const followee = await this.usersRepository.findOne({
       where: {
         email: followeeEmail,
       },
     });
 
-    const followee = await this.usersRepository.findOne({
+    const follower = await this.usersRepository.findOne({
       where: {
-        email: email,
+        email,
       },
     });
-    if (followee) {
+    if (followee && follower) {
       return await this.subscriptionRepository.save({
-        followerId: follower.id,
-        followeeId: followee.id,
+        user: followee,
       });
     }
   }
@@ -49,7 +48,7 @@ export class SubscriptionsService {
 
     if (user) {
       return await this.subscriptionRepository.delete({
-        followerId: user.id,
+        // followerId: user.id,
       });
     }
   }

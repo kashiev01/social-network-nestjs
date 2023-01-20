@@ -1,7 +1,8 @@
-import { Controller, Get, Body, Post, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Body, Post, Param, Delete, UseGuards } from '@nestjs/common';
 import { SubscriptionsService } from './subscriptions.service';
 import { SubscriptionEntity } from './entities/subscription.entity';
 import { SubcriptionDto } from './dto/subscription.dto';
+import { ValidEmailGuard } from 'src/email.guard';
 
 @Controller('subscribe')
 export class SubscriptionsController {

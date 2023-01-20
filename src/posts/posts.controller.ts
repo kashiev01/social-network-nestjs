@@ -2,6 +2,8 @@ import { Controller, Post, Body, Param, Get, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostDto } from './dto/post.dto';
 import { PostEntity } from './entities/posts.entity';
+import { UseGuards } from '@nestjs/common/decorators';
+import { ValidEmailGuard } from 'src/email.guard';
 
 @Controller('posts')
 export class PostsController {

@@ -3,17 +3,20 @@ import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update.profile.dto';
 import { UserEntity } from './entities/user.entity';
 import { Post } from '@nestjs/common/decorators';
+import { Public } from './public.decorator';
+import { ValidEmailGuard } from 'src/email.guard';
 
-@Controller('profile')
+@Controller()
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
-  @Get()
+  @Public()
+  @Get('profile')
   async createUser(@Param('email') email): Promise<UserEntity> {
     return await this.userService.createUser(email);
   }
 
-  @Post()
+  @Post('profile')
   async updateUser(
     @Param('email') email,
     @Body() updateUserDto: UpdateProfileDto,

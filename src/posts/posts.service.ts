@@ -13,18 +13,20 @@ export class PostsService {
     private postsRepository: Repository<PostEntity>,
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    @InjectRepository(SubscriptionEntity)
+    private readonly subsRepository: Repository<SubscriptionEntity>,
   ) {}
 
   async createPost(email, postDto: PostDto): Promise<any> {
     const user = await this.usersRepository.findOne({
       where: {
-        email: email,
+        email,
       },
     });
     if (user) {
       return await this.postsRepository.save({
         message: postDto.message,
-        userId: user.id,
+        user: user,
       });
     }
   }
@@ -32,27 +34,29 @@ export class PostsService {
   async getPosts(email, dateTime): Promise<any> {
     const follower = await this.usersRepository.findOne({
       where: {
-        email: email,
+        email,
       },
     });
 
+    const a = await this.subsRepository.find();
+
     const followee = await this.usersRepository.find();
 
-    const arrOfIds = followee.map((obj) => {
+    const arrOfIds = a.map((obj) => {
       return obj.id;
     });
 
     if (follower && dateTime) {
       return await this.postsRepository.find({
         where: {
-          userId: In([follower.id, ...arrOfIds]),
+          user: In([follower.id, ...arrOfIds]),
           createDateTime: MoreThanOrEqual(dateTime),
         },
         order: { createDateTime: 'DESC' },
       });
     } else if (follower) {
       return await this.postsRepository.find({
-        where: { userId: In([follower.id, ...arrOfIds]) },
+        where: { user: In([follower.id, ...arrOfIds]) },
         take: 20,
         order: { createDateTime: 'DESC' },
       });

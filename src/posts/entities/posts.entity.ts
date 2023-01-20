@@ -21,13 +21,7 @@ export class PostEntity {
   @Column({ type: 'varchar', length: 255 })
   message: string;
 
-  @Column()
-  userId: number;
-
-  @ManyToOne(() => UserEntity, (user) => user.posts, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
+  @ManyToOne(() => UserEntity, ({ posts }: UserEntity) => posts)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 }

@@ -14,14 +14,14 @@ export class UsersService {
   async createUser(email): Promise<UserEntity> {
     const user = await this.usersRepository.findOne({
       where: {
-        email: email,
+        email,
       },
     });
 
     if (user) {
       return user;
     } else {
-      return await this.usersRepository.save({ email: email });
+      return await this.usersRepository.save({ email });
     }
   }
 
@@ -31,14 +31,14 @@ export class UsersService {
   ): Promise<UserEntity> {
     const user = await this.usersRepository.findOne({
       where: {
-        email: email,
+        email,
       },
     });
 
     if (user) {
       await this.usersRepository.update({ email: email }, updateUserDto);
       return await this.usersRepository.findOne({
-        where: { email: email },
+        where: { email },
       });
     }
   }

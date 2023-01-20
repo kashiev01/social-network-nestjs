@@ -12,16 +12,7 @@ export class SubscriptionEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  followerId: number;
-
-  @Column()
-  followeeId: number;
-
-  @ManyToOne(() => UserEntity, (profile) => profile.id, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'followerId' })
-  profile: UserEntity;
+  @ManyToOne(() => UserEntity, ({ subscriptions }: UserEntity) => subscriptions)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  user: UserEntity;
 }

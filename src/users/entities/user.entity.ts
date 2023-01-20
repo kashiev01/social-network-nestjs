@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { PostEntity } from 'src/posts/entities/posts.entity';
+import { SubscriptionEntity } from '../../subscriptions/entities/subscription.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -21,13 +22,13 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 300, unique: true })
   email: string;
 
-  @OneToMany(() => PostEntity, (post) => post.user, {
-    nullable: true,
+  @OneToMany(() => PostEntity, ({ user }: PostEntity) => user, {
+    cascade: true,
   })
-  @JoinColumn()
   posts: PostEntity[];
 
-  // @ManyToMany(() => SubscriptionEntity, { cascade: true, onDelete: 'CASCADE' })
-  // @JoinTable({ name: 'sub_auto' })
-  // subscriptions: SubscriptionEntity[];
+  @OneToMany(() => SubscriptionEntity, ({ user }: SubscriptionEntity) => user, {
+    cascade: true,
+  })
+  subscriptions: SubscriptionEntity[];
 }
